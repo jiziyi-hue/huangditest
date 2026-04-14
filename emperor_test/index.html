@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-314ZEZ8EP6"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-314ZEZ8EP6');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>你最像哪位中国皇帝？</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- 装饰性水墨背景 -->
+    <div class="cloud-decoration cloud-1"></div>
+    <div class="cloud-decoration cloud-2"></div>
+    <div class="cloud-decoration cloud-3"></div>
+    <div class="cloud-decoration cloud-4"></div>
+
+    <!-- 侧边栏图鉴按钮 -->
+    <button class="sidebar-collection-btn" onclick="toggleSidebarCollection()" title="皇帝图鉴">
+        <span class="sidebar-icon">🏛️</span>
+        <span class="sidebar-text">图鉴</span>
+        <span class="sidebar-badge" id="sidebar-badge"></span>
+    </button>
+
+    <!-- 侧边栏图鉴面板 -->
+    <div id="sidebar-collection" class="sidebar-collection">
+        <div class="sidebar-header">
+            <h3>🏛️ 皇帝图鉴</h3>
+            <button class="sidebar-close" onclick="toggleSidebarCollection()">×</button>
+        </div>
+        <div class="sidebar-progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="sidebar-progress-fill"></div>
+            </div>
+            <span class="progress-text" id="sidebar-progress-text">0/50</span>
+        </div>
+        <div class="sidebar-content" id="sidebar-collection-content">
+            <!-- JS动态生成 -->
+        </div>
+    </div>
+
+    <!-- 徽章展示区域（主页常驻） -->
+    <div id="badges-display" class="badges-display">
+        <!-- JS动态生成徽章 -->
+    </div>
+
+    <main id="app-container">
+        <!-- 首页 -->
+        <section id="screen-home" class="screen active">
+            <h1 class="title">测测你骨子里<br><span class="highlight">最像哪位中国皇帝</span></h1>
+            <p class="subtitle">这不是单纯的性格测试，而是决策风格与权力偏好的原型匹配。<br>你的选择将对应历史上皇帝的真实选择，匹配出"你会做出和谁一样的决策"。</p>
+            
+            <!-- 模式选择 -->
+            <div class="mode-selection">
+                <h3 class="mode-title">选择测试模式</h3>
+                <div class="mode-cards">
+                    <div class="mode-card" data-mode="simple" onclick="selectMode('simple')">
+                        <div class="mode-icon">⚡</div>
+                        <div class="mode-name">精简版</div>
+                        <div class="mode-desc">12道经典情境</div>
+                        <div class="mode-time">约 3 分钟</div>
+                        <div class="mode-features">
+                            <span class="feature-tag">快速</span>
+                            <span class="feature-tag">核心冲突</span>
+                        </div>
+                    </div>
+                    <div class="mode-card" data-mode="full" onclick="selectMode('full')">
+                        <div class="mode-icon">📜</div>
+                        <div class="mode-name">完整版</div>
+                        <div class="mode-desc">36道深度情境</div>
+                        <div class="mode-time">约 10 分钟</div>
+                        <div class="mode-features">
+                            <span class="feature-tag">精准</span>
+                            <span class="feature-tag">全面覆盖</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 目标皇帝选择（可选） -->
+            <div class="target-emperor-section">
+                <label class="target-emperor-label">🎯 想匹配哪位皇帝？（可选）</label>
+                <select id="target-emperor-select" class="target-emperor-select" onchange="selectTargetEmperor()">
+                    <option value="">-- 不指定，正常测试 --</option>
+                </select>
+                <p class="target-emperor-hint">选择后，答题时会标记出该皇帝会选的选项</p>
+            </div>
+
+            <div class="btn-container">
+                <button id="btn-start" class="btn primary-btn" disabled>请先选择模式</button>
+            </div>
+
+            <p class="footer-text">本站测试逻辑与灵感源于网络。本项目仅作为个人技术实践使用，不具有任何商业用途。测试结果仅供娱乐，不代表任何政治立场或对现实人物的评价。感谢原作者的创意分享！</p>
+        </section>
+
+        <!-- 图鉴收集页 -->
+        <section id="screen-collection" class="screen hidden">
+            <div class="collection-header">
+                <button class="back-btn" onclick="backToHomeFromCollection()">← 返回首页</button>
+                <h2 class="collection-title">🏛️ 皇帝图鉴</h2>
+                <div class="collection-stats">
+                    <span class="stats-text">收集进度</span>
+                    <span class="stats-number" id="collection-stats">0/50</span>
+                </div>
+            </div>
+            <p class="collection-desc">完成测试即可解锁对应的皇帝图鉴，集齐所有皇帝！</p>
+            <div id="collection-grid" class="collection-categories-container">
+                <!-- JS动态生成分类区块 -->
+            </div>
+        </section>
+
+        <!-- 独立皇帝攻略查询页 -->
+        <section id="screen-standalone-guide" class="screen hidden">
+            <div class="standalone-guide-header">
+                <button class="back-btn" onclick="backToHome()">← 返回首页</button>
+                <h2 class="standalone-guide-title">📖 皇帝攻略查询</h2>
+            </div>
+            <p class="standalone-guide-desc">选择一位皇帝，查看每道题应该选择什么选项才能匹配到他</p>
+            <div class="standalone-guide-selector">
+                <select id="standalone-emperor-select" onchange="showStandaloneEmperorGuide()">
+                    <option value="">-- 请选择皇帝 --</option>
+                </select>
+            </div>
+            <div id="standalone-guide-result" class="standalone-guide-result">
+                <div class="guide-placeholder">
+                    <p>👆 请从上方选择一位皇帝</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 答题页 -->
+        <section id="screen-quiz" class="screen hidden">
+            <!-- 阶段标签 -->
+            <div class="stage-indicator">
+                <div class="stage-badge" id="stage-badge">少年期</div>
+                <div class="stage-desc" id="stage-desc">登基初期，权力未稳</div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar-bg">
+                    <div id="progress-bar-fill" class="progress-bar-fill"></div>
+                </div>
+                <span id="progress-text">1 / 12</span>
+            </div>
+
+            <div class="question-container">
+                <div class="inner-border"></div>
+                <h2 id="question-text" class="question-title">加载中...</h2>
+                <div id="options-container" class="options-grid">
+                    <!-- 选项占位符 -->
+                </div>
+            </div>
+            
+
+        </section>
+
+        <!-- 加载分析页 -->
+        <section id="screen-loading" class="screen hidden">
+            <div class="loading-spinner"></div>
+            <h2 class="loading-text">正在翻阅史书...</h2>
+            <p id="loading-subtext" class="loading-sub">分析你的决策风格</p>
+            <div class="loading-stages">
+                <div class="loading-stage" id="stage-1">提取权力偏好...</div>
+                <div class="loading-stage" id="stage-2">比对历史原型...</div>
+                <div class="loading-stage" id="stage-3">生成匹配结果...</div>
+            </div>
+        </section>
+
+        <!-- 结果页 -->
+        <section id="screen-result" class="screen hidden">
+            <div class="result-card-classic">
+                <div class="result-header-flex">
+                    <div class="result-portrait">
+                        <img id="result-img" src="assets/portrait.png" alt="皇帝画像">
+                    </div>
+                    <div class="result-info">
+                        <div class="top-tags">
+                            <span class="small-tag" id="match-mode-tag">精简版匹配</span>
+                            <span class="small-tag">情境决策比对</span>
+                        </div>
+                        <h1 id="result-name" class="result-name-large">皇帝名</h1>
+                        <p id="result-title" class="result-tagline-text">标签占位</p>
+                        <div id="trait-badges" class="trait-badges">
+                            <!-- JS动态插入 -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-block">
+                    <h4>为什么会是这个人</h4>
+                    <p id="result-desc" class="result-text">描述...</p>
+                </div>
+
+                <div class="result-block">
+                    <h4>简要事迹</h4>
+                    <p id="result-history" class="result-text">事迹...</p>
+                </div>
+                
+                <!-- 统计信息 -->
+                <div class="result-block stats-block">
+                    <h4>📊 匹配统计</h4>
+                    <div class="stats-content">
+                        <div class="stat-item">
+                            <span class="stat-number" id="stat-count">--</span>
+                            <span class="stat-label">人与你匹配到同一位皇帝</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="stat-percent">--%</span>
+                            <span class="stat-label">占比</span>
+                        </div>
+                    </div>
+                    <p class="stats-note">* 统计数据实时更新中</p>
+                </div>
+                
+                <!-- 决策风格分析 -->
+                <div class="result-block">
+                    <h4>你的决策风格分析</h4>
+                    <div id="decision-analysis" class="decision-analysis">
+                        <!-- JS动态插入 -->
+                    </div>
+                </div>
+
+                <div class="result-block-no-bg">
+                    <h4>最接近的另外两位</h4>
+                    <div class="similar-emperors" id="similar-emperors">
+                        <!-- JS动态插入 -->
+                    </div>
+                </div>
+
+                <div class="result-block result-share-block">
+                    <h4>可分享文案</h4>
+                    <p id="share-text-content" class="result-text"></p>
+                </div>
+
+                <div class="feedback-buttons">
+                    <button class="feedback-btn" onclick="fb('准')">👍 准</button>
+                    <button class="feedback-btn" onclick="fb('一般')">🤔 一般</button>
+                    <button class="feedback-btn" onclick="fb('不准')">👎 不准</button>
+                </div>
+
+                <p class="disclaimer">本站测试逻辑与灵感源于网络。本项目仅作为个人技术实践使用，不具有任何商业用途。测试结果仅供娱乐，不代表任何政治立场或对现实人物的评价。感谢原作者的创意分享！</p>
+
+                <div class="action-buttons">
+                    <button id="btn-restart" class="action-btn primary-action">再测一次</button>
+                    <button id="btn-switch-mode" class="action-btn secondary-action">切换模式重测</button>
+                    <button id="btn-share" class="action-btn secondary-action">复制分享文案</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
